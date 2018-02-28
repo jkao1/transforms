@@ -1,4 +1,4 @@
-package main
+package matrix
 
 import (
 	"fmt"
@@ -78,3 +78,19 @@ func PrintMatrix(matrix [][]int) {
 
 	fmt.Println(output)
 }
+
+func MakeTranslationMatrix(x, y, z int) (m [][]int) {
+	m = NewMatrix() // 4x4
+	MakeIdentity(m)
+	m[0][3], m[1][3], m[2][3] = x, y, z
+	return m
+}
+
+func MakeDilationMatrix(x, y, z int) (m [][]int) {
+	m = NewMatrix() // 4x4
+	MakeIdentity(m)
+	m[0][0], m[1][1], m[2][2] = x, y, z
+	return m
+}
+
+// TODO: rotation matrix

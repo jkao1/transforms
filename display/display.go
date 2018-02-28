@@ -1,6 +1,6 @@
 // Contains display functions for screens
 
-package main
+package display
 
 const XRES = 500
 const YRES = 500

@@ -1,17 +1,21 @@
-package main
+package draw
+
+import (
+	"../matrix"
+)
 
 var DEFAULT_DRAW_COLOR []int = []int{255, 255, 255}
 
-func DrawLines(matrix [][]int, screen [][][]int) {
-	for i := 0; i < len(matrix[0]) - 1; i++ {
-		point := ExtractColumn(matrix, i)
-		nextPoint := ExtractColumn(matrix, i + 1)
+func DrawLines(m [][]int, screen [][][]int) {
+	for i := 0; i < len(m[0]) - 1; i++ {
+		point := matrix.ExtractColumn(m, i)
+		nextPoint := matrix.ExtractColumn(m, i + 1)
 		x0, y0 := point[0], point[1]
 		x1, y1 := nextPoint[0], nextPoint[1]
 		DrawLine(screen, x0, y0, x1, y1)
 	}
-	firstPoint := ExtractColumn(matrix, 0)
-	lastPoint := ExtractColumn(matrix, len(matrix[0]) - 1)
+	firstPoint := matrix.ExtractColumn(m, 0)
+	lastPoint := matrix.ExtractColumn(m, len(m[0]) - 1)
 	DrawLine(screen, firstPoint[0], firstPoint[1], lastPoint[0], lastPoint[1])
 }
 
@@ -109,7 +113,5 @@ func DrawLine(screen [][][]int, x0, y0, x1, y1 int) {
 }
 
 func plot(screen [][][]int, x, y int) {
-	if x >= 0 && x < XRES && y >= 0 && y < YRES {
-		screen[y][x] = DEFAULT_DRAW_COLOR[:]
-	}
+	screen[y][x] = DEFAULT_DRAW_COLOR[:]
 }
