@@ -1,4 +1,4 @@
-// Package matrix provides functions for creating and manipulating matrices
+// Package matrix provides functions for creating and manipulating matrices.
 package matrix
 
 import (
@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// MakeIdentity makes a matrix an identity matrix.
 func MakeIdentity(matrix [][]float64) {
 	for i, row := range matrix {
 		for j, _ := range row {
@@ -19,6 +20,8 @@ func MakeIdentity(matrix [][]float64) {
 	}
 }
 
+// MultiplyMatrices multiples two matrices and stores it in the second matrix
+// given.
 func MultiplyMatrices(m1Ptr, m2Ptr *[][]float64) {
 	m1, m2 := *m1Ptr, *m2Ptr
 	product := NewMatrix(len(m1), len(m2[0]))
@@ -33,6 +36,8 @@ func MultiplyMatrices(m1Ptr, m2Ptr *[][]float64) {
 	*m2Ptr = product
 }
 
+// ExtractColumn extracts the column of a matrix. It returns that column as
+// a slice.
 func ExtractColumn(matrix [][]float64, colIndex int) []float64 {
 	col := make([]float64, len(matrix))
 
@@ -43,6 +48,7 @@ func ExtractColumn(matrix [][]float64, colIndex int) []float64 {
 	return col
 }
 
+// dot receives two slices as vectors. It returns their dot product.
 func dot(x, y []float64) float64 {
 	output := 0.0
 	for i, _ := range x {
@@ -51,6 +57,8 @@ func dot(x, y []float64) float64 {
 	return output
 }
 
+// NewMatrix creates a new float64 matrix. The default row and column size is 4.
+// It returns the new matrix.
 func NewMatrix(params ...int) [][]float64 {
 	rows := 4
 	cols := 4
@@ -68,12 +76,15 @@ func NewMatrix(params ...int) [][]float64 {
 	return matrix
 }
 
+// PrintMatrix prints a float64 matrix.
 func PrintMatrix(matrix [][]float64) {
 	output := ""
 
 	for _, row := range matrix {
 		for _, value := range row {
-			output += fmt.Sprintf("%f%s", value, strings.Repeat(" ", 4 - len(fmt.Sprint(value))))
+			floatString := fmt.Sprintf("%.2f", value)
+			spaces := strings.Repeat(" ", 8 - len(floatString))
+			output += floatString + spaces
 		}
 		output += "\n"
 	}
@@ -81,6 +92,8 @@ func PrintMatrix(matrix [][]float64) {
 	fmt.Println(output)
 }
 
+// MakeTranslationMatrix creates a translation matrix using x, y, and z as the
+// translation offsets.
 func MakeTranslationMatrix(x, y, z float64) (m [][]float64) {
 	m = NewMatrix()
 	MakeIdentity(m)
@@ -88,6 +101,8 @@ func MakeTranslationMatrix(x, y, z float64) (m [][]float64) {
 	return
 }
 
+// MakeDilationMatrix creates a dilation matrix using x, y, and z as the
+// dilation offsets.
 func MakeDilationMatrix(x, y, z float64) (m [][]float64) {
 	m = NewMatrix()
 	MakeIdentity(m)
