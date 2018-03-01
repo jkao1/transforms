@@ -1,3 +1,5 @@
+// Package draw contains useful functions to manipulate the edge matrix and draw
+// it onto a screen.
 package draw
 
 import (
@@ -6,7 +8,8 @@ import (
 
 var DEFAULT_DRAW_COLOR []int = []int{255, 255, 255}
 
-func DrawLines(m [][]int, screen [][][]int) {
+// DrawLines draws an edge matrix onto a screen.
+func DrawLines(m [][]float64, screen [][][]int) {
 	for i := 0; i < len(m[0]) - 1; i++ {
 		point := matrix.ExtractColumn(m, i)
 		nextPoint := matrix.ExtractColumn(m, i + 1)
@@ -19,19 +22,22 @@ func DrawLines(m [][]int, screen [][][]int) {
 	DrawLine(screen, firstPoint[0], firstPoint[1], lastPoint[0], lastPoint[1])
 }
 
-func AddPoint(matrix [][]int, x, y, z int) {
-	matrix[0] = append(matrix[0], x)
-	matrix[1] = append(matrix[1], y)
-	matrix[2] = append(matrix[2], z)
-	matrix[3] = append(matrix[3], 1)
+// AddPoint adds a point to an edge matrix.
+func AddPoint(m [][]float64, x, y, z float64) {
+	m[0] = append(m[0], x)
+	m[1] = append(m[1], y)
+	m[2] = append(m[2], z)
+	m[3] = append(m[3], 1)
 }
 
-func AddEdge(matrix [][]int, x0, y0, z0, x1, y1, z1 int) {
-	AddPoint(matrix, x0, y0, z0)
-	AddPoint(matrix, x1, y1, z1)
+// AddEdge adds an edge (two points) to an edge matrix.
+func AddEdge(m [][]float64, x0, y0, z0, x1, y1, z1 float64) {
+	AddPoint(m, x0, y0, z0)
+	AddPoint(m, x1, y1, z1)
 }
 
-func DrawLine(screen [][][]int, x0, y0, x1, y1 int) {
+// DrawLine draws a line from (x0, y0) to (x1, y1) onto a screen.
+func DrawLine(screen [][][]int, x0, y0, x1, y1 float64) {
 	if x1 < x0 {
 		x0, x1 = x1, x0
 		y0, y1 = y1, y0
@@ -56,8 +62,8 @@ func DrawLine(screen [][][]int, x0, y0, x1, y1 int) {
 		return
 	}
 
-	slope := float64(A) / float64(-B)
-	var d int
+	slope := A / (-B)
+	var d float64
 
 	if slope >= 0 && slope <= 1 { // octant 1
 		d = 2*A + B
@@ -112,6 +118,15 @@ func DrawLine(screen [][][]int, x0, y0, x1, y1 int) {
 	}
 }
 
-func plot(screen [][][]int, x, y int) {
-	screen[y][x] = DEFAULT_DRAW_COLOR[:]
+func plot(screen [][][]int, x, y float64) {
+	a, b := float64ToInt(x), float64ToInt(y)
+	screen[b][a] = DEFAULT_DRAW_COLOR[:]
+}
+
+// float64ToInt rounds a float64 without truncating it. It returns an int.
+func float64ToInt(f float64) int {
+	if (f - float64(int(f)) < 0.5) {
+		return int(f)
+	}
+	return int(f + 1)
 }

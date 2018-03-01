@@ -1,5 +1,4 @@
-// Contains display functions for screens
-
+// Package display contains useful functions for the screen
 package display
 
 const XRES = 500

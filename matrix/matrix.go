@@ -1,11 +1,13 @@
+// Package matrix provides functions for creating and manipulating matrices
 package matrix
 
 import (
 	"fmt"
+	"math"
 	"strings"
 )
 
-func MakeIdentity(matrix [][]int) {
+func MakeIdentity(matrix [][]float64) {
 	for i, row := range matrix {
 		for j, _ := range row {
 			if i == j {
@@ -17,7 +19,7 @@ func MakeIdentity(matrix [][]int) {
 	}
 }
 
-func MultiplyMatrices(m1Ptr, m2Ptr *[][]int) {
+func MultiplyMatrices(m1Ptr, m2Ptr *[][]float64) {
 	m1, m2 := *m1Ptr, *m2Ptr
 	product := NewMatrix(len(m1), len(m2[0]))
 
@@ -31,8 +33,8 @@ func MultiplyMatrices(m1Ptr, m2Ptr *[][]int) {
 	*m2Ptr = product
 }
 
-func ExtractColumn(matrix [][]int, colIndex int) []int {
-	col := make([]int, len(matrix))
+func ExtractColumn(matrix [][]float64, colIndex int) []float64 {
+	col := make([]float64, len(matrix))
 
 	for i, _ := range matrix {
 		col[i] = matrix[i][colIndex]
@@ -41,15 +43,15 @@ func ExtractColumn(matrix [][]int, colIndex int) []int {
 	return col
 }
 
-func dot(x, y []int) int {
-	output := 0
+func dot(x, y []float64) float64 {
+	output := 0.0
 	for i, _ := range x {
 		output += x[i] * y[i]
 	}
 	return output
 }
 
-func NewMatrix(params ...int) [][]int {
+func NewMatrix(params ...int) [][]float64 {
 	rows := 4
 	cols := 4
 
@@ -58,20 +60,20 @@ func NewMatrix(params ...int) [][]int {
 		cols = params[1]
 	}
 
-	matrix := make([][]int, rows)
+	matrix := make([][]float64, rows)
 	for i, _ := range matrix {
-		matrix[i] = make([]int, cols)
+		matrix[i] = make([]float64, cols)
 	}
 
 	return matrix
 }
 
-func PrintMatrix(matrix [][]int) {
+func PrintMatrix(matrix [][]float64) {
 	output := ""
 
 	for _, row := range matrix {
 		for _, value := range row {
-			output += fmt.Sprintf("%d%s", value, strings.Repeat(" ", 4 - len(fmt.Sprint(value))))
+			output += fmt.Sprintf("%f%s", value, strings.Repeat(" ", 4 - len(fmt.Sprint(value))))
 		}
 		output += "\n"
 	}
@@ -79,18 +81,26 @@ func PrintMatrix(matrix [][]int) {
 	fmt.Println(output)
 }
 
-func MakeTranslationMatrix(x, y, z int) (m [][]int) {
-	m = NewMatrix() // 4x4
+func MakeTranslationMatrix(x, y, z float64) (m [][]float64) {
+	m = NewMatrix()
 	MakeIdentity(m)
 	m[0][3], m[1][3], m[2][3] = x, y, z
-	return m
+	return
 }
 
-func MakeDilationMatrix(x, y, z int) (m [][]int) {
-	m = NewMatrix() // 4x4
+func MakeDilationMatrix(x, y, z float64) (m [][]float64) {
+	m = NewMatrix()
 	MakeIdentity(m)
 	m[0][0], m[1][1], m[2][2] = x, y, z
-	return m
+	return
 }
 
-// TODO: rotation matrix
+// MakeRotX creates a rotation matrix from a theta as the angle of rotation
+// around the x axis. It returns the rotation matrix.
+func MakeRotX(theta float64) (m [][]float64) {
+	m = NewMatrix()
+	radians := theta / 180 * math.Pi
+	MakeIdentity(m)
+	m[1][1], m[1][2] = math.Cos(radians), -math.Sin(radians)
+	return
+}
