@@ -110,12 +110,38 @@ func MakeDilationMatrix(x, y, z float64) (m [][]float64) {
 	return
 }
 
-// MakeRotX creates a rotation matrix from a theta as the angle of rotation
-// around the x axis. It returns the rotation matrix.
+// MakeRotX creates a rotation matrix using theta as the angle of rotation and
+// X as the axis of rotation. It returns the rotation matrix.
 func MakeRotX(theta float64) (m [][]float64) {
 	m = NewMatrix()
-	radians := theta / 180 * math.Pi
+  radians := theta / 180 * math.Pi
+	sin, cos := math.Sin(radians), math.Cos(radians)
 	MakeIdentity(m)
-	m[1][1], m[1][2] = math.Cos(radians), -math.Sin(radians)
+	m[1][1], m[1][2] = cos, -sin
+	m[2][1], m[2][2] = sin, cos
+	return
+}
+
+// MakeRotY creates a rotation matrix using theta as the angle of rotation and
+// Y as the axis of rotation. It returns the rotation matrix.
+func MakeRotY(theta float64) (m [][]float64) {
+	m = NewMatrix()
+  radians := theta / 180 * math.Pi
+	sin, cos := math.Sin(radians), math.Cos(radians)
+	MakeIdentity(m)
+	m[0][0], m[0][2] = cos, sin
+	m[2][0], m[2][2] = -sin, cos
+	return
+}
+
+// MakeRotZ creates a rotation matrix using theta as the angle of rotation and
+// Z as the axis of rotation. It returns the rotation matrix.
+func MakeRotZ(theta float64) (m [][]float64) {
+	m = NewMatrix()
+  radians := theta / 180 * math.Pi
+	sin, cos := math.Sin(radians), math.Cos(radians)
+	MakeIdentity(m)
+	m[0][0], m[0][1] = cos, -sin
+	m[1][0], m[1][1] = sin, cos
 	return
 }
