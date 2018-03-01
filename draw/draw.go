@@ -3,10 +3,11 @@
 package draw
 
 import (
+	"../display"
 	"../matrix"
 )
 
-var DEFAULT_DRAW_COLOR []int = []int{255, 255, 255}
+var DefaultDrawColor []int = []int{0, 0, 0}
 
 // DrawLines draws an edge matrix onto a screen.
 func DrawLines(m [][]float64, screen [][][]int) {
@@ -118,9 +119,12 @@ func DrawLine(screen [][][]int, x0, y0, x1, y1 float64) {
 	}
 }
 
+// plot draws a point (x, y) onto a screen with the default draw color.
 func plot(screen [][][]int, x, y float64) {
-	a, b := float64ToInt(x), float64ToInt(y)
-	screen[b][a] = DEFAULT_DRAW_COLOR[:]
+	newX, newY := float64ToInt(x), display.YRES - float64ToInt(y) - 1
+	if (newX >= 0 && newX < display.XRES && newY >= 0 && newY < display.YRES) {
+		screen[newY][newX] = DefaultDrawColor[:]
+	}
 }
 
 // float64ToInt rounds a float64 without truncating it. It returns an int.
