@@ -10,7 +10,7 @@ import (
 
 const XRES = 500
 const YRES = 500
-const PPMFilename := "pic.ppm"
+const PPMFilename = "pic.ppm"
 
 // NewScreen creates a new screen of size XRES by YRES. It returns the new
 // screen.

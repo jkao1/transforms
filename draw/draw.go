@@ -127,6 +127,13 @@ func plot(screen [][][]int, x, y float64) {
 	}
 }
 
+// DrawLineFromParams gets arguments from a params slice.
+func DrawLineFromParams(screen [][][]int, params ...float64) {
+	if (len(params) >= 4) {
+		DrawLine(screen, params[0], params[1], params[2], params[3])
+	}
+}
+
 // float64ToInt rounds a float64 without truncating it. It returns an int.
 func float64ToInt(f float64) int {
 	if (f - float64(int(f)) < 0.5) {

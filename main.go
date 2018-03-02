@@ -2,7 +2,6 @@ package main
 
 import (
 	"./display"
-	"./draw"
 	"./matrix"
 	"./parser"
 )
@@ -18,8 +17,8 @@ func main() {
 	}
 
 	// defer display.DisplayScreen(screen)
-	defer draw.DrawLines(edges, screen)
+	// defer draw.DrawLines(edges, screen)
 
-	parser.ParseFile("script", transform, edges, screen)
+	parser.ParseFile("test.in", transform, edges, screen)
 
 }

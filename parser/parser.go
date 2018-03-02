@@ -3,12 +3,12 @@ package parser
 
 import (
 	"bufio"
-	"fmt"
-	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	"../display"
+	"../draw"
 	"../matrix"
 )
 
@@ -45,12 +45,15 @@ func ParseFile(filename string,
 	screen [][][]int) {
 
 	file, err := os.Open(filename)
-	check(err)
+	if (err != nil) {
+		panic(err)
+	}
+
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		line = scanner.Text()
+		line := scanner.Text()
 
 		// Immediate operations (no parameters)
 		if line == "ident" {
@@ -58,29 +61,38 @@ func ParseFile(filename string,
 		} else if line == "display" {
 			display.DisplayScreen(screen)
 		} else if line == "apply" {
-			matrix.MultiplyMatrices(transform, edges)
+			matrix.MultiplyMatrices(&transform, &edges)
 		} else if line == "save" {
 			display.WriteScreenToPPM(screen)
 		}
 
-		// Non-immediate operations
+		scanner.Scan()
+
+		// Non-immediate operations (has parameters)
 		if line == "line" {
-			scanner.Scan()
-			params = []float64{}
-			for _, v := strings.Fields(scanner.Text()) {
-				params = append(params, float64(v))
-			}
-			drawline ...
+			draw.DrawLineFromParams(screen, FloatParams(scanner.Text)...)
+		} else if line == "move" {
+			// translate ...
+		} else if line == "scale" {
+			// dilation ...
+		} else if line == "rotate" {
+			// rotate ...
 		}
-	}
+}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 }
 
-func check(e error) {
-	if e != nil {
-		panic(e)
+func FloatParams(text string) (args []float64) {
+	args = []float64{}
+	for _, v := range strings.Fields(text) {
+		floated, err := strconv.ParseFloat(v, 64)
+		if (err != nil) {
+			panic(err)
+		}
+		args = append(args, floated)
 	}
+	return
 }
