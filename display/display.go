@@ -10,6 +10,7 @@ import (
 
 const XRES = 500
 const YRES = 500
+const PPMFilename := "pic.ppm"
 
 // NewScreen creates a new screen of size XRES by YRES. It returns the new
 // screen.
@@ -29,23 +30,16 @@ func NewScreen() (screen [][][]int) {
 
 // DisplayScreen uses XQuartz's "display" command to display a PPM.
 func DisplayScreen(screen [][][]int) {
-	fname := WriteScreenToPPM(screen)
-
-	_, err := exec.Command("display", fname).Output()
+	WriteScreenToPPM(screen)
+	_, err := exec.Command("display", PPMFilename).Output()
 	if err != nil {
 		panic(err)
 	}
 }
 
 // WriteScreenToPPM takes a screen as an argument and writes it to a PPM file.
-// It returns the name of the PPM file.
-func WriteScreenToPPM(screen [][][]int, args ...string) (fname string) {
-	fname = "foo.ppm"
-	if (len(args) > 0) {
-		fname = args[0]
-	}
-
-	file, err := os.OpenFile(fname, os.O_CREATE | os.O_WRONLY, 0644)
+func WriteScreenToPPM(screen [][][]int) {
+	file, err := os.OpenFile(PPMFilename, os.O_CREATE | os.O_WRONLY, 0644)
 	if (err != nil) {
 		panic(err)
 	}
@@ -62,6 +56,4 @@ func WriteScreenToPPM(screen [][][]int, args ...string) (fname string) {
 	}
 
 	file.WriteString(buffer.String())
-
-	return
 }
