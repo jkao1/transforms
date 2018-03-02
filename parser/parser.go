@@ -55,30 +55,49 @@ func ParseFile(filename string,
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		// Immediate operations (no parameters)
+		// Immediate operations (no arguments)
 		if line == "ident" {
 			matrix.MakeIdentity(transform)
 		} else if line == "display" {
 			display.DisplayScreen(screen)
 		} else if line == "apply" {
 			matrix.MultiplyMatrices(&transform, &edges)
-		} else if line == "save" {
-			display.WriteScreenToPPM(screen)
 		}
 
 		scanner.Scan()
 
-		// Non-immediate operations (has parameters)
-		if line == "line" {
-			draw.DrawLineFromParams(screen, FloatParams(scanner.Text)...)
-		} else if line == "move" {
-			// translate ...
-		} else if line == "scale" {
-			// dilation ...
-		} else if line == "rotate" {
-			// rotate ...
+		// Non-immediate operations (has arguments)
+		params := scanner.Text()
+
+		if line == "save" {
+			displ
 		}
-}
+		if line == "line" {
+			draw.DrawLineFromParams(screen, FloatParams(params)...)
+		} else {
+			var stepTransform [][]float64
+
+			if line == "move" {
+				stepTransform = matrix.MakeTranslationMatrix(FloatParams(params)...)
+			} else if line == "scale" {
+				stepTransform = matrix.MakeDilationMatrix(FloatParams(params)...)
+			} else if line == "rotate" {
+				args := string.Fields(params)
+				numDegrees = args[1]
+
+				switch axis := args[0] {
+				case "x":
+					stepTransform = matrix.MakeRotX(numDegrees)
+				case "y":
+					stepTransform = matrix.MakeRotY(numDegrees)
+				case "z":
+					stepTransform = matrix.MakeRotZ(numDegrees)
+				}
+			}
+
+			matrix.MultiplyMatrices(&stepTransform, &transform)
+		}
+	}
 
 	if err := scanner.Err(); err != nil {
 		panic(err)
