@@ -3,10 +3,13 @@ package main
 import (
 	"./display"
 	"./draw"
+	"./matrix"
+	"./parser"
 )
 
 func main() {
 	screen := display.NewScreen()
+	transform := matrix.NewMatrix()
 	edges := [][]float64{
 		{0.0},
 		{0.0},
@@ -14,10 +17,9 @@ func main() {
 		{1.0},
 	}
 
-	defer display.DisplayScreen(screen)
+	// defer display.DisplayScreen(screen)
 	defer draw.DrawLines(edges, screen)
 
-	draw.AddPoint(edges, 100, 0, 0)
-	draw.AddPoint(edges, 100, 100, 0)
-	draw.AddPoint(edges, 0, 100, 0)
+	parser.ParseFile("script", transform, edges, screen)
+
 }
