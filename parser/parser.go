@@ -4,9 +4,12 @@ package parser
 import (
 	"bufio"
 	"fmt"
-	"io"
-	"io/ioutil"
+	"log"
 	"os"
+	"strings"
+
+	"../display"
+	"../matrix"
 )
 
 
@@ -40,5 +43,44 @@ func ParseFile(filename string,
 	transform [][]float64,
 	edges [][]float64,
 	screen [][][]int) {
-	
+
+	file, err := os.Open(filename)
+	check(err)
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line = scanner.Text()
+
+		// Immediate operations (no parameters)
+		if line == "ident" {
+			matrix.MakeIdentity(transform)
+		} else if line == "display" {
+			display.DisplayScreen(screen)
+		} else if line == "apply" {
+			matrix.MultiplyMatrices(transform, edges)
+		} else if line == "save" {
+			display.WriteScreenToPPM(screen)
+		}
+
+		// Non-immediate operations
+		if line == "line" {
+			scanner.Scan()
+			params = []float64{}
+			for _, v := strings.Fields(scanner.Text()) {
+				params = append(params, float64(v))
+			}
+			drawline ...
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
 }
