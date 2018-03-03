@@ -18,9 +18,6 @@ func DrawLines(m [][]float64, screen [][][]int) {
 		x1, y1 := nextPoint[0], nextPoint[1]
 		DrawLine(screen, x0, y0, x1, y1)
 	}
-	firstPoint := matrix.ExtractColumn(m, 0)
-	lastPoint := matrix.ExtractColumn(m, len(m[0]) - 1)
-	DrawLine(screen, firstPoint[0], firstPoint[1], lastPoint[0], lastPoint[1])
 }
 
 // AddPoint adds a point to an edge matrix.
@@ -32,7 +29,9 @@ func AddPoint(m [][]float64, x, y, z float64) {
 }
 
 // AddEdge adds an edge (two points) to an edge matrix.
-func AddEdge(m [][]float64, x0, y0, z0, x1, y1, z1 float64) {
+func AddEdge(m [][]float64, params ...float64) {
+	x0, y0, z0 := params[0], params[1], params[2]
+	x1, y1, z1 := params[3], params[4], params[5]
 	AddPoint(m, x0, y0, z0)
 	AddPoint(m, x1, y1, z1)
 }
