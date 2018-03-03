@@ -58,10 +58,15 @@ func ParseFile(filename string,
 		// Immediate operations (no arguments)
 		if line == "ident" {
 			matrix.MakeIdentity(transform)
+			continue
 		} else if line == "display" {
+			display.ClearScreen(screen)
+			draw.DrawLines(edges, screen)
 			display.DisplayScreen(screen)
+			continue
 		} else if line == "apply" {
 			matrix.MultiplyMatrices(&transform, &edges)
+			continue
 		}
 
 		scanner.Scan()
@@ -70,10 +75,9 @@ func ParseFile(filename string,
 		params := scanner.Text()
 
 		if line == "save" {
-			displ
-		}
-		if line == "line" {
-			draw.DrawLineFromParams(screen, FloatParams(params)...)
+			display.WriteScreenToExtension(screen, params)
+		} else if line == "line" {
+			draw.AddEdge(edges, FloatParams(params)...)
 		} else {
 			var stepTransform [][]float64
 
@@ -82,10 +86,13 @@ func ParseFile(filename string,
 			} else if line == "scale" {
 				stepTransform = matrix.MakeDilationMatrix(FloatParams(params)...)
 			} else if line == "rotate" {
-				args := string.Fields(params)
-				numDegrees = args[1]
+				args := strings.Fields(params)
+				numDegrees, err := strconv.ParseFloat(args[1], 64)
+				if (err != nil) {
+					panic(err)
+				}
 
-				switch axis := args[0] {
+				switch args[0] {
 				case "x":
 					stepTransform = matrix.MakeRotX(numDegrees)
 				case "y":
@@ -95,7 +102,11 @@ func ParseFile(filename string,
 				}
 			}
 
-			matrix.MultiplyMatrices(&stepTransform, &transform)
+			if len(transform) == 0 {
+				transform = stepTransform
+			} else {
+				matrix.MultiplyMatrices(&stepTransform, &transform)
+			}
 		}
 	}
 
