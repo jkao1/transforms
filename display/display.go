@@ -37,6 +37,26 @@ func DisplayScreen(screen [][][]int) {
 	}
 }
 
+// ClearScreen clears a screen.
+func ClearScreen(screen [][][]int) {
+	for i, _ := range screen {
+		screen[i] = make([][]int, XRES)
+
+		for j, _ := range screen[i] {
+			screen[i][j] = []int{255, 255, 255}
+		}
+	}
+}
+
+// WriteScreenToExtension writes a screen to a filename.
+func WriteScreenToExtension(screen [][][]int, filename string) {
+	WriteScreenToPPM(screen)
+	_, err := exec.Command("convert", PPMFilename, filename).Output()
+	if err != nil {
+		panic(err)
+	}
+}
+
 // WriteScreenToPPM takes a screen as an argument and writes it to a PPM file.
 func WriteScreenToPPM(screen [][][]int) {
 	file, err := os.OpenFile(PPMFilename, os.O_CREATE | os.O_WRONLY, 0644)
