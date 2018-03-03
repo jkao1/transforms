@@ -10,6 +10,6 @@ func main() {
 	transform := make([][]float64, 0)
 	edges := make([][]float64, 4)
 
-	parser.ParseFile("script", transform, edges, screen)
+	parser.ParseFile("art", transform, edges, screen)
 
 }

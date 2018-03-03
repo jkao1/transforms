@@ -69,7 +69,7 @@ func ParseFile(filename string,
 			continue
 		}
 
-		if !strings.Contains("linesavemovescalematrix", line) {
+		if len(line) == 0 && !strings.Contains("linesavemovescalematrix", line) {
 			continue
 		}
 
