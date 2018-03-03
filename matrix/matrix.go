@@ -94,19 +94,19 @@ func PrintMatrix(matrix [][]float64) {
 
 // MakeTranslationMatrix creates a translation matrix using x, y, and z as the
 // translation offsets.
-func MakeTranslationMatrix(x, y, z float64) (m [][]float64) {
+func MakeTranslationMatrix(params ...float64) (m [][]float64) {
 	m = NewMatrix()
 	MakeIdentity(m)
-	m[0][3], m[1][3], m[2][3] = x, y, z
+	m[0][3], m[1][3], m[2][3] = params[0], params[1], params[2]
 	return
 }
 
 // MakeDilationMatrix creates a dilation matrix using x, y, and z as the
 // dilation offsets.
-func MakeDilationMatrix(x, y, z float64) (m [][]float64) {
+func MakeDilationMatrix(params ...float64) (m [][]float64) {
 	m = NewMatrix()
 	MakeIdentity(m)
-	m[0][0], m[1][1], m[2][2] = x, y, z
+	m[0][0], m[1][1], m[2][2] = params[0], params[1], params[2]
 	return
 }
 
