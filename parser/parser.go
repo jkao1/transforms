@@ -69,6 +69,10 @@ func ParseFile(filename string,
 			continue
 		}
 
+		if !strings.Contains("linesavemovescalematrix", line) {
+			continue
+		}
+
 		scanner.Scan()
 
 		// Non-immediate operations (has arguments)
