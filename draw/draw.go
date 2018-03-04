@@ -10,10 +10,10 @@ import (
 var DefaultDrawColor []int = []int{0, 0, 0}
 
 // DrawLines draws an edge matrix onto a screen.
-func DrawLines(m [][]float64, screen [][][]int) {
-	for i := 0; i < len(m[0]) - 1; i++ {
-		point := matrix.ExtractColumn(m, i)
-		nextPoint := matrix.ExtractColumn(m, i + 1)
+func DrawLines(edges [][]float64, screen [][][]int) {
+	for i := 0; i < len(edges[0]) - 1; i++ {
+		point := matrix.ExtractColumn(edges, i)
+		nextPoint := matrix.ExtractColumn(edges, i + 1)
 		x0, y0 := point[0], point[1]
 		x1, y1 := nextPoint[0], nextPoint[1]
 		DrawLine(screen, x0, y0, x1, y1)
