@@ -67,6 +67,8 @@ func ParseFile(filename string,
 		} else if line == "apply" {
 			matrix.MultiplyMatrices(&transform, &edges)
 			continue
+		} else if line == "quit" {
+			return
 		}
 
 		if len(line) == 0 && !strings.Contains("linesavemovescalematrix", line) {
