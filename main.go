@@ -11,5 +11,4 @@ func main() {
 	edges := make([][]float64, 4)
 
 	parser.ParseFile("art", transform, edges, screen)
-
 }
